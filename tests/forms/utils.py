@@ -1,34 +1,3 @@
-import json
-from random import choice, randint
-
-import requests
-from tqdm import trange
-
-
-async def form_template_script():
-    url = "http://127.0.0.1:8000/get_form/form_template/"
-    headers = {"Content-Type": "application/json"}
-
-    for _ in trange(100, desc='Создание записей в бд'):
-        form_template = {
-            "name": await get_random_json_value('form_names.json'),
-            "fields": await generate_random_fields()
-        }
-
-        await request_post(url, headers, form_template)
-
-
-async def get_form_script():
-    url = "http://127.0.0.1:8000/get_form"
-    headers = {"Content-Type": "application/json"}
-
-    form_data = {
-        "data": await generate_random_fields()
-    }
-
-    await request_post(url, headers, form_data)
-
-
 async def generate_random_fields():
     rand_dict = {
         field: value for field, value in

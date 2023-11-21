@@ -3,13 +3,12 @@ from os import getenv
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from src.config import DB_URL
 
 load_dotenv()
 
-MONGODB_URL = getenv('DB_URL', default='mongodb://localhost:27017')
+client = AsyncIOMotorClient(DB_URL)
 
-client = AsyncIOMotorClient(MONGODB_URL)
+db = client[getenv('DB_NAME')]
 
-database = client['forms_db']
-
-forms_collection = database['forms_collection']
+forms_collection = db[getenv('DB_COLLECTION')]

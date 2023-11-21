@@ -4,7 +4,14 @@ from datetime import datetime
 from validate_email import validate_email
 
 
-def validate_field(field_value):
+def validate_form(form_dict: dict) -> dict:
+    result = {}
+    for key, value in form_dict.items():
+        result[key] = validate_field(value)
+    return result
+
+
+def validate_field(field_value: str) -> str:
     try:
         if datetime.strptime(field_value, '%d-%m-%Y') or datetime.strptime(
                 field_value, '%Y-%m-%d'):

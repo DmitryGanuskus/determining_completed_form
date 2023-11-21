@@ -1,10 +1,13 @@
+from typing import List, Dict, Any
+
 from pydantic import BaseModel
+
+
+# class FormField(BaseModel):
+#     name: str
+#     value: str
 
 
 class FormTemplate(BaseModel):
     name: str
-    fields: dict
-
-
-class FormData(BaseModel):
-    data: dict
+    fields: Dict[str, Any]
