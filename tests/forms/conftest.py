@@ -1,19 +1,15 @@
 import asyncio
-from os import getenv
 
 import pytest
-from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from src.config import DB_URL_TEST, DB_NAME_TEST
-
-load_dotenv()
+from src.config import settings
 
 
 @pytest.fixture(autouse=True, scope="session")
 async def db():
-    client_test = AsyncIOMotorClient(DB_URL_TEST)
-    db_test = client_test[DB_NAME_TEST]
+    client_test = AsyncIOMotorClient(settings.db.mongo_url_test)
+    db_test = client_test.forms_db_test
 
     yield db_test
 

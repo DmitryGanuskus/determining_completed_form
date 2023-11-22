@@ -1,17 +1,26 @@
-from os import getenv
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
-from dotenv import load_dotenv
 
-load_dotenv()
+class DBSettings(BaseSettings):
+    mongo_host: str = Field(default='127.0.0.1', env='MONGO_HOST')
+    mongo_port: int = Field(default=27017, env='MONGO_PORT')
+    mongo_url: str = Field(
+        default='mongodb://127.0.0.1:27017',
+        env=f'mongodb://{mongo_host}:{mongo_port}'
+    )
 
-DEBUG = getenv('DEBUG')
+    mongo_host_test: str = Field(default='127.0.0.1', env='MONGO_HOST_TEST')
+    mongo_port_test: int = Field(default=27017, env='MONGO_PORT_TEST')
+    mongo_url_test: str = Field(
+        default='mongodb://127.0.0.1:27017',
+        env=f'mongodb://{mongo_host}:{mongo_port}'
+    )
 
-DB_HOST = getenv('DB_HOST')
-DB_PORT = getenv('DB_PORT')
-DB_URL = f'mongodb://{DB_HOST}:{DB_PORT}'
 
-DB_HOST_TEST = getenv('DB_HOST_TEST')
-DB_PORT_TEST = getenv('DB_PORT_TEST')
-DB_NAME_TEST = getenv('DB_NAME_TEST')
-DB_COLL_TEST = getenv('DB_COLL_TEST')
-DB_URL_TEST = f'mongodb://{DB_HOST_TEST}:{DB_PORT_TEST}'
+class Settings(BaseSettings):
+    db = DBSettings()
+    debug: bool = Field(default=False, env='DEBUG')
+
+
+settings = Settings()

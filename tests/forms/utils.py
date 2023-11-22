@@ -1,3 +1,10 @@
+import json
+from random import randint, choice
+
+import requests
+from tqdm import trange
+
+
 async def generate_random_fields():
     rand_dict = {
         field: value for field, value in

@@ -1,14 +1,9 @@
-from os import getenv
-
-from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from src.config import DB_URL
+from src.config import settings
 
-load_dotenv()
+client = AsyncIOMotorClient(settings.db.mongo_url)
 
-client = AsyncIOMotorClient(DB_URL)
+db = client.forms_db
 
-db = client[getenv('DB_NAME')]
-
-forms_collection = db[getenv('DB_COLLECTION')]
+forms_collection = db.forms_collection

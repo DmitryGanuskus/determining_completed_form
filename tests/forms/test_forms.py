@@ -1,10 +1,5 @@
-import json
-from random import choice, randint
-
-import requests
 from tqdm import trange
 
-from src.config import DB_COLL_TEST
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from tests.forms.utils import (
