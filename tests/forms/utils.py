@@ -16,14 +16,14 @@ async def generate_random_fields():
 
 
 async def get_random_json_items(file_name: str):
-    with open(file_name, 'r', encoding='utf-8') as file:
+    with open(file_name, encoding='utf-8') as file:
         parsed_file = json.load(file)
         items = choice(list(parsed_file.items()))
         return items
 
 
 async def get_random_json_value(file_name: str):
-    with open(file_name, 'r', encoding='utf-8') as file:
+    with open(file_name, encoding='utf-8') as file:
         parsed_file = json.load(file)
         value = choice(list(parsed_file.values()))
         return value
