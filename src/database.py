@@ -4,6 +4,6 @@ from src.config import settings
 
 client = AsyncIOMotorClient(settings.db.mongo_url)
 
-db = client.forms_db
+db = client[settings.db.MONGO_DB_NAME]
 
-forms_collection = db.forms_collection
+forms_collection = db[settings.db.MONGO_DB_COLLECTION_NAME]
