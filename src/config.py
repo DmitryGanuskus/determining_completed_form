@@ -1,4 +1,4 @@
-from pprint import pprint
+import os
 
 from pydantic_settings import BaseSettings
 from pydantic import Field
@@ -29,14 +29,24 @@ class DBSettings(BaseSettings):
     def mongo_test_url(self):
         return f'mongodb://{self.MONGO_HOST_TEST}:{self.MONGO_PORT_TEST}'
 
+    def switch_db_name(self, test_mode: bool):
+        if test_mode:
+            self.MONGO_DB_NAME = self.MONGO_TEST_DB_NAME
+            self.MONGO_DB_COLLECTION_NAME = self.MONGO_TEST_DB_COLLECTION_NAME
+
+        else:
+            self.MONGO_DB_NAME = os.getenv('MONGO_DB_NAME')
+            self.MONGO_DB_COLLECTION_NAME = os.getenv(
+                'MONGO_DB_COLLECTION_NAME')
+
 
 class Settings(BaseSettings):
     db: DBSettings = DBSettings()
     DEBUG: bool = Field(env='DEBUG', default=False)
     TESTING: bool = Field(env='TESTING', default=False)
-    if TESTING:
-        db.MONGO_DB_NAME = db.MONGO_TEST_DB_NAME
-        db.MONGO_DB_COLLECTION_NAME = db.MONGO_TEST_DB_COLLECTION_NAME
+
+    def switch_db_name(self):
+        self.db.switch_db_name(self.TESTING)
 
     class Config:
         env_file = '.env'

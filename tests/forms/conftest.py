@@ -12,9 +12,11 @@ from src.main import app
 def set_testing_flag():
     # Установка TESTING в значение True перед началом тестов
     settings.TESTING = True
+    settings.switch_db_name()
     yield
     # Изменение TESTING на значение False после окончания тестов
     settings.TESTING = False
+    settings.switch_db_name()
 
 
 @pytest.fixture
@@ -34,15 +36,13 @@ def event_loop():
 @pytest.fixture(scope="session")
 async def db():
     client_test = AsyncIOMotorClient(settings.db.mongo_test_url)
-
     db = client_test[settings.db.MONGO_TEST_DB_NAME]
     yield db
-
     client_test.close()
 
 
 @pytest.fixture(autouse=True, scope="function")
-async def collection(db: AsyncIOMotorDatabase):
+async def collection(set_testing_flag, db: AsyncIOMotorDatabase):
     collection = db[settings.db.MONGO_TEST_DB_COLLECTION_NAME]
     yield collection
-    collection.drop()
+    await collection.drop()
