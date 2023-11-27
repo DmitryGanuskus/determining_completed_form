@@ -1,3 +1,4 @@
+"""Forms router."""
 from fastapi import APIRouter, Request
 
 from src.database import get_db
@@ -15,6 +16,11 @@ router = APIRouter(
 
 @router.post("")
 async def get_form(request: Request) -> dict:
+    """Convert the request to the format f_name1=value1&f_name2=value2 to the
+    dictionary and, based on the data received, return the template name from
+    the database. Or convert the resulting form in the format
+    {f_name 1: FIELD_TYPE, f_name 2: FIELD_TYPE}.
+    """
     # Get the collection from the database
     collection = get_db()['collection']
 
@@ -39,6 +45,7 @@ async def get_form(request: Request) -> dict:
 
 @router.post("/form_template/")
 async def create_form_template(form_template: FormTemplate) -> dict:
+    """Create an entry in the database."""
     # Get the collection from the database
     collection = get_db()['collection']
 

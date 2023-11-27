@@ -1,3 +1,4 @@
+"""Forms Router Tests."""
 import pytest
 from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
@@ -5,10 +6,10 @@ from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
 
 @pytest.mark.asyncio
 async def test_mongodb_connection(db: AsyncIOMotorDatabase):
-    """
-    Test to check the connection to the database.
+    """Test to check the connection to the database.
 
     Args:
+    ----
         db (AsyncIOMotorDatabase): The test database connection.
     """
     # Send a ping command to the database and get the result
@@ -19,10 +20,10 @@ async def test_mongodb_connection(db: AsyncIOMotorDatabase):
 
 @pytest.mark.asyncio
 async def test_db_insertion(collection: AsyncIOMotorCollection):
-    """
-    Test to check the insertion of data into the database collection.
+    """Test to check the insertion of data into the database collection.
 
     Args:
+    ----
         collection (AsyncIOMotorCollection): The test collection in the
             database.
     """
@@ -38,11 +39,11 @@ async def test_db_insertion(collection: AsyncIOMotorCollection):
 
 @pytest.mark.asyncio
 async def test_get_form_without_data_in_db(client: AsyncClient):
-    """
-    Test to check the response of getting a form when there is no data in the
-        database.
+    """Test to check the response of getting a form when there is no data in
+    the database.
 
     Args:
+    ----
         client (AsyncClient): The test HTTP client.
     """
     # Send a POST request to the '/get_form' endpoint with some data
@@ -64,11 +65,11 @@ async def test_get_form_without_data_in_db(client: AsyncClient):
 @pytest.mark.asyncio
 async def test_get_form_with_data_in_db(collection: AsyncIOMotorCollection,
                                         client: AsyncClient):
-    """
-    Test to check the response of getting a form when there is data in the
+    """Test to check the response of getting a form when there is data in the
         database.
 
     Args:
+    ----
         collection (AsyncIOMotorCollection): The test collection in the
             database.
         client (AsyncClient): The test HTTP client.
@@ -87,7 +88,7 @@ async def test_get_form_with_data_in_db(collection: AsyncIOMotorCollection,
     # Insert the data into the collection
     await collection.insert_many(data)
     # Send a POST request to the '/get_form' endpoint with some data
-    response = await client.post(url=f'/get_form', data={
+    response = await client.post(url='/get_form', data={
         'user_name': 'ПуЛи_От_БаБуЛи', 'phone': '+7 999 999 99 99'})
 
     # Check if the response status code is 200

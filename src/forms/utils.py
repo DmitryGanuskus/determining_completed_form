@@ -1,3 +1,4 @@
+"""Utilities for forms."""
 import re
 from datetime import datetime
 
@@ -6,6 +7,7 @@ from validate_email import validate_email
 
 
 async def get_query(form: dict, collection: AsyncIOMotorCollection) -> dict:
+    """Give a query for the database."""
     # Conditions to check for the existence of fields from the template
     field_conditions = [
         {f"fields.{field}": {'$exists': True}} for field in form.keys()
@@ -34,6 +36,7 @@ async def get_query(form: dict, collection: AsyncIOMotorCollection) -> dict:
 
 
 def check_fields_match(form_fields: dict, template_fields: dict) -> bool:
+    """Check the form fields for entry into the template."""
     # Check if the form fields match the template fields
     return all(
         [item in template_fields.items() for item in form_fields.items()]
@@ -41,11 +44,13 @@ def check_fields_match(form_fields: dict, template_fields: dict) -> bool:
 
 
 def converting_fields_in_form_to_type(form_dict: dict) -> dict:
+    """Convert the form field to types."""
     # Convert fields in the form dictionary to their respective types
     return {key: get_field_type(value) for key, value in form_dict.items()}
 
 
 def get_field_type(field_value: str) -> str:
+    """Give the type of field."""
     # Determine the type of field value
     try:
         if datetime.strptime(field_value, '%d.%m.%Y'):

@@ -1,3 +1,4 @@
+"""Main file for start app."""
 import uvicorn
 from fastapi import FastAPI
 

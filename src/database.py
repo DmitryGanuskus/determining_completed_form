@@ -1,11 +1,11 @@
+"""File for database initialization."""
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from src.config import settings
 
 
 def get_db() -> dict:
-    """
-    Returns a database object, a MongoDB client, and a collection,
+    """Return the database object, the MongoDB client, and the collection,
     depending on the application settings.
     """
     if settings.TESTING:

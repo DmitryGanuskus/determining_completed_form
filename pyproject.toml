@@ -44,6 +44,7 @@ MONGO_TEST_DB_COLLECTION_NAME = "forms_collection_test"
 line-length = 79
 show-fixes = true
 src = ['src']
+ignore = ['D205']
 select = [
     'E',
     'F',
