@@ -8,15 +8,11 @@ from src.config import settings
 from src.main import app
 
 
-@pytest.fixture(scope='session', autouse=True)
-def set_testing_flag():
-    # Установка TESTING в значение True перед началом тестов
+@pytest.fixture(autouse=True)
+async def switch_test_mode():
     settings.TESTING = True
-    settings.switch_db_name()
     yield
-    # Изменение TESTING на значение False после окончания тестов
     settings.TESTING = False
-    settings.switch_db_name()
 
 
 @pytest.fixture
@@ -35,14 +31,14 @@ def event_loop():
 
 @pytest.fixture(scope="session")
 async def db():
-    client_test = AsyncIOMotorClient(settings.db.mongo_test_url)
-    db = client_test[settings.db.MONGO_TEST_DB_NAME]
+    client_test = AsyncIOMotorClient(settings.test_db.mongo_test_url)
+    db = client_test[settings.test_db.MONGO_TEST_DB_NAME]
     yield db
     client_test.close()
 
 
 @pytest.fixture(autouse=True, scope="function")
-async def collection(set_testing_flag, db: AsyncIOMotorDatabase):
-    collection = db[settings.db.MONGO_TEST_DB_COLLECTION_NAME]
+async def collection(switch_test_mode, db: AsyncIOMotorDatabase):
+    collection = db[settings.test_db.MONGO_TEST_DB_COLLECTION_NAME]
     yield collection
     await collection.drop()

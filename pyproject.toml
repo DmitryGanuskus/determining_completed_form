@@ -19,7 +19,8 @@ pydantic-settings = "^2.1.0"
 ruff = "^0.1.6"
 httpx = "^0.25.1"
 python-dotenv = "^1.0.0"
-pydantic = {extras = ["dotenv"], version = "^2.5.2"}
+pydantic = { extras = ["dotenv"], version = "^2.5.2" }
+pytest-env = "^1.1.1"
 
 
 [build-system]
@@ -28,10 +29,15 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.pytest.ini_options]
-pythonpath = [
-    ".", "src",
-]
-asyncio_mode="auto"
+pythonpath = [".", "src"]
+asyncio_mode = "auto"
+
+
+[tool.pytest_env]
+MONGO_TEST_DB_NAME = 'forms_db_test'
+MONGO_TEST_DB_COLLECTION_NAME = "forms_collection_test"
+
+
 
 [tool.ruff]
 line-length = 79

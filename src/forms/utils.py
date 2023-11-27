@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
 
-from validate_email import validate_email
 from motor.motor_asyncio import AsyncIOMotorCollection
+from validate_email import validate_email
 
 
 async def get_query(form: dict, collection: AsyncIOMotorCollection) -> dict:
@@ -12,7 +12,7 @@ async def get_query(form: dict, collection: AsyncIOMotorCollection) -> dict:
     ]
 
     # Получаем список всех ключей в коллекции
-    all_keys = await collection.find_one(projection={'fields': True})
+    all_keys = await collection.find_one({}, projection={'fields': True})
     if all_keys:
         all_keys = all_keys['fields'].keys()
 
@@ -27,13 +27,10 @@ async def get_query(form: dict, collection: AsyncIOMotorCollection) -> dict:
             '$and': field_conditions,
             '$nor': extra_field_conditions
         }
+        return query
 
-
-    else:
-        # Формируем запрос с использованием $and
-        query = {'$and': field_conditions}
-
-    return query
+    # Return query with $and
+    return {'$and': field_conditions}
 
 
 def check_fields_match(form_fields: dict, template_fields: dict) -> bool:
@@ -43,10 +40,7 @@ def check_fields_match(form_fields: dict, template_fields: dict) -> bool:
 
 
 def converting_fields_in_form_to_type(form_dict: dict) -> dict:
-    result = {}
-    for key, value in form_dict.items():
-        result[key] = get_field_type(value)
-    return result
+    return {key: get_field_type(value) for key, value in form_dict.items()}
 
 
 def get_field_type(field_value: str) -> str:

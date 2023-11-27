@@ -1,10 +1,6 @@
-from time import sleep
-
 import pytest
 from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
-
-from tests.forms.utils import data
 
 
 @pytest.mark.asyncio
@@ -17,11 +13,11 @@ async def test_mongodb_connection(db: AsyncIOMotorDatabase):
 
 @pytest.mark.asyncio
 async def test_db_insertion(collection: AsyncIOMotorCollection):
-    data_dict = [{'name': 'name', 'fields': [{'value': 'value'}]}]
-    await collection.insert_one(*data_dict)
+    data = [{'name': 'name', 'fields': [{'value': 'value'}]}]
+    await collection.insert_one(*data)
     result = await collection.find({}).to_list(length=1)
 
-    assert result == data_dict
+    assert result == data
 
 
 @pytest.mark.asyncio
@@ -43,7 +39,7 @@ async def test_get_form_without_data_in_db(client: AsyncClient):
 @pytest.mark.asyncio
 async def test_get_form_with_data_in_db(collection: AsyncIOMotorCollection,
                                         client: AsyncClient):
-    data_dict = [
+    data = [
         {'name': '1 template',
          'fields': {'user_name': 'text', 'user_email': 'email'}},
         {'name': '2 template',
@@ -54,7 +50,7 @@ async def test_get_form_with_data_in_db(collection: AsyncIOMotorCollection,
 
     ]
 
-    await collection.insert_many(data_dict)
+    await collection.insert_many(data)
     response = await client.post(url=f'/get_form', data={
         'user_name': 'ПуЛи_От_БаБуЛи', 'phone': '+7 999 999 99 99'})
 
