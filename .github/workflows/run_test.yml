@@ -19,10 +19,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: poetry install
+        run: |
+          poetry install
 
       - name: Test with pytest
-        run: coverage run -m pytest -v -s
+        run: |
+          coverage run -m pytest -v -s
 
       - name: Generate  CoverageReport
-        run: coverage report -m
+        run: |
+          coverage report -m
