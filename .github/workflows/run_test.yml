@@ -1,13 +1,18 @@
 name: Run Unit Test via Pytest
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: [ "3.11" ]
 
     steps:
       - name: Checkout repository
@@ -31,5 +36,6 @@ jobs:
           poetry run coverage run -m pytest -v -s
 
       - name: Generate  CoverageReport
-        run: | 
+        run: |
           poetry run coverage report -m
+
