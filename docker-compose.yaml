@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  mongodb:
+    container_name: db_determining
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    env_file:
+      - .env.db
+
+  fastapi:
+    container_name: determining_completed_form
+    build:
+      context: .
+    command: |
+      gunicorn src.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
+    #    command: uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+    ports:
+      - '9999:8000'
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+
+volumes:
+  dbdata6:
