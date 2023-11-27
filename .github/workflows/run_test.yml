@@ -19,12 +19,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Poetry
-        run: | 
+        run: |
           pip install poetry
 
       - name: Install dependencies
         run: |
           poetry install
+
+      - name: Activate virtual environment
+        run: |
+          source $(poetry env info --path)/bin/activate
 
       - name: Test with pytest
         run: |
