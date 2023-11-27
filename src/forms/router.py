@@ -6,6 +6,7 @@ from src.forms.utils import (
     converting_fields_in_form_to_type, check_fields_match, get_query
 )
 
+# Create an APIRouter instance with a prefix and tag
 router = APIRouter(
     prefix='/get_form',
     tags=['Forms'],
@@ -14,13 +15,19 @@ router = APIRouter(
 
 @router.post("")
 async def get_form(request: Request) -> dict:
+    # Get the collection from the database
     collection = get_db()['collection']
+
+    # Get the form data from the request
     form_data = await request.form()
+
+    # Convert the form data to a typed dictionary
     form = converting_fields_in_form_to_type(dict(form_data))
 
-    # Собираем запрос
+    # Build the query
     query = await get_query(form=form, collection=collection)
-    # Выводим результаты
+
+    # Output the results
     async for result in collection.find(query):
         if check_fields_match(
                 form_fields=form, template_fields=result['fields']
@@ -32,10 +39,16 @@ async def get_form(request: Request) -> dict:
 
 @router.post("/form_template/")
 async def create_form_template(form_template: FormTemplate) -> dict:
+    # Get the collection from the database
     collection = get_db()['collection']
+
+    # Convert the form field values to a typed dictionary
     form_template.fields = converting_fields_in_form_to_type(
         {field.name: field.value for field in form_template.fields}
     )
 
+    # Insert the form template into the collection
     result = await collection.insert_one(dict(form_template))
+
+    # Return the ID of the inserted document
     return {"_id": str(result.inserted_id)}
